@@ -1,0 +1,5 @@
+rm -rf  /f/gitHome/07Client/*
+ cp -r Classes /f/gitHome/07Client/
+ cp -r Resources /f/gitHome/07Client/
+ cp -r cocosstudio /f/gitHome/07Client/
+ cp -r 07Client* /f/gitHome/07Client/
