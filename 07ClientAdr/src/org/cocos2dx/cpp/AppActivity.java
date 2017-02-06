@@ -57,7 +57,7 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 	
 	private static Context mContext;
 	private static String mUid;
-	private static String mOrderNum; //璁㈠崟鍙�
+	private static String mOrderNum; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,48 +76,31 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 	
 	public static void login()
 	{
-		//涓夋柟璋冪敤
 		TBLTransferParams params = new TBLTransferParams();
-		params.frm = "测试";
-		params.fdata = "测试";
+		params.frm = "tianTianAiGuandan";
+		params.fdata = "nothing";
 		TBLUserCenter.initClient(mContext, TBLUserCenter.ACTION_TYPE_LOGIN, (AppActivity) mContext, params);
 	}
 	
 	
 	public static void payHandle(int igoodsId, int orderNum, int a, int b)
 	{
-		//igoodsId = 8401;  //test
-		//涓夋柟璋冪敤
 		TBLTransferParams params = new TBLTransferParams();
 		
-		params.uid =  getmUid();              //鐢ㄦ埛id
-		params.cp_param = "1";                 //cp鍙傛暟
+		params.uid =  getmUid();              
+		params.cp_param = "1";                
 		
-		String tempString = String.valueOf((int)(1+Math.random()*100000000)) + getmUid();
-		params.ordernum = tempString.substring(0,16);
+		String tempString = String.valueOf((int)(1+Math.random()*100000000)) + getmUid() + "123456789012345678901234567890";
+		params.ordernum = tempString.substring(0,32);
 		setmOrderNum(params.ordernum);
 		
-		params.sid = 1;                //鏈嶅姟鍣╥d
-		params.gameName = "天天爱掼蛋";   //"澶ц瘽瑗挎父"
-		
-		
-		
-		/*
-			8403       鐗逛环閽荤煶 12
-			8404       100閽荤煶 10
-			8405       300閽荤煶 30
-			8406       500閽荤煶 50,
-			8407       1000閽荤煶 100
-			8408       鐗逛环閲戝竵 6
-			8409       10涓囬噾甯� 10
-			8410       30涓囬噾甯� 30
-			8411       50涓囬噾甯� 50
-			8412       100涓囬噾甯� 100
-		 * */
-		params.goodsId = igoodsId;        //鍟嗗搧id
+		params.sid = 1; 
+		params.gameName = "天天爱掼蛋";   
+
+		params.goodsId = igoodsId;        
 		switch(igoodsId)
 		{
-			case 8401:
+			case 8401:  
 				params.goodsItem = "10钻石";  
 				params.pay_amount = 1;       
 				params.gold = 10;             
@@ -125,16 +108,8 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 				params.fdata = "mallTestActivity0";    
 				break;
 				
-			case 8402:
-				params.goodsItem = "50钻石"; 
-				params.pay_amount = 5;        
-				params.gold = 50;            
-				params.frm = "mall";                
-				params.fdata = "mallTestActivity0";    
-				break;	
-				
 			case 8403:
-				params.goodsItem = "特价钻石160"; 
+				params.goodsItem = "160钻石"; 
 				params.pay_amount = 12;        
 				params.gold = 160;            
 				params.frm = "mall";                 
@@ -166,11 +141,11 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 				break;
 				
 			case 8407:
-//				params.goodsItem = "1000閽荤煶";  //"20棰楅捇鐭�"
-//				params.pay_amount = 100;        //浜烘皯甯侀噾棰�(鍏�)
-//				params.gold = 1000;             //娓告垙涓殑閲戝竵銆佺爾鐭炽�佸厓瀹濇暟
-//				params.frm = "mall";                 //鏉ユ簮
-//				params.fdata = "mallTestActivity0";    //鏉ユ簮鎻忚堪
+//				params.goodsItem = "1000闁借崵鐓�";  //"20妫版鎹囬惌锟�"
+//				params.pay_amount = 100;        //娴滅儤鐨敮渚�鍣炬０锟�(閸忥拷)
+//				params.gold = 1000;             //濞撳憡鍨欐稉顓犳畱闁叉垵绔甸妴浣虹埦閻偨锟戒礁鍘撶�规繃鏆�
+//				params.frm = "mall";                 //閺夈儲绨�
+//				params.fdata = "mallTestActivity0";    //閺夈儲绨幓蹇氬牚
 //				break;
 				
 				//test
@@ -183,7 +158,7 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 				break;
 				
 			case 8408:
-				params.goodsItem = "特价金币10万";  
+				params.goodsItem = "10万金币";  
 				params.pay_amount = 6;       
 				params.gold = 100000;            
 				params.frm = "mall";                
@@ -227,10 +202,8 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 				
 				
 		}
-		Log.d("callback", "cocos2d-x payhandle before ");
 		TBLUserCenter.initClient(mContext, TBLUserCenter.ACTION_TYPE_CHARGE, (AppActivity) mContext, params);
-	
-		Log.d("callback", "cocos2d-x payhandle ssecess ");
+		Log.d("callback", "cocos2d-x payhandle " + getmOrderNum());
 	}
 	
 	@Override
@@ -259,12 +232,12 @@ public class AppActivity extends Cocos2dxActivity implements ITBLCallback {
 
 	@Override
 	public void payCallBack(TBLResultMsg arg0) {
-		// TODO Auto-generated method stub
+
 		Log.d("callback","##cocos2d-x payCallBack : arg0.code" + arg0.code);
 		
 		SDKPlugin.paySecessCallback(getmOrderNum(), "123");
 		
-		Log.d("callback","##cocos2d-x payCallBack secseese");
+		Log.d("callback","##cocos2d-x payCallBack" + getmOrderNum() );
 	}
 
 
