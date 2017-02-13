@@ -7,7 +7,8 @@ TTSocketClient::TTSocketClient()
 
 	m_isOpenSocketLogin = false;
 	m_isOpenSocketGame = false;
-
+	mSocketLogin = 0;
+	mSocketGame = 0;
 #if (PlatWhich == PlatWin)
 	unsigned short wVersionRequested;
 	wVersionRequested = MAKEWORD(2, 0);
@@ -68,108 +69,186 @@ unsigned char TTSocketClient::MapRecvByte(unsigned char const cbData)
 	return cbMap;
 }
 
-
-ODSocket* TTSocketClient::getSocket(unsigned char bSocketType)
+bool TTSocketClient::recvDateLogin()
 {
-	if (bSocketType == 0)
-	{
-		return mSocketLogin;
-	}
-	else if (bSocketType == 1)
-	{
-		return mSocketGame;
-	}
-}
+	int iRetCode = 0;
+	bool  isContinune;
+	TCP_Info   pInfoHead;
+	unsigned short wPacketSize;
+	unsigned short wPacketSizeSave;
 
-void TTSocketClient::closeMySocket(unsigned char bSocketType)
-{
-#if (PlatWhich == PlatWin)
-	if (bSocketType == 0)
+	while (mSocketLogin != 0)
 	{
-		closesocket(mSocketLogin->m_sock);
-	}
-	else if (bSocketType == 1)
-	{
-		closesocket(mSocketGame->m_sock);
-	}
-#else
-	if (bSocketType == 0)
-	{
-		close(mSocketLogin->m_sock);
-	}
-	else if (bSocketType == 1)
-	{
-		close(mSocketGame->m_sock);
-	}
-#endif
-}
-
-void TTSocketClient::startSocketLogin(const std::string &host)
-{
-	if (m_isOpenSocketLogin)
-	{
-		return;
-	}
-	m_isOpenSocketLogin = true;
-
-	socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-	std::thread t_connect([this, host]() 
-	{
-		mSocketLogin = ODSocket::create();
-		bool isConnect = false;
-		while (!isConnect)
+		iRetCode = recv(mSocketLogin, (char*)&pInfoHead, sizeof(TCP_Info), 0);
+		log("cocos2d-x header %d", iRetCode);
+		isContinune = true;
+		if (0 == iRetCode)
 		{
-			if ((isConnect = mSocketGame->Connect(host)))
-			{
-				// 服务器连接成功后，通知主线程
-			//	MTNotificationQueue::getInstance()->postNotification(CONNECT_SERVER_SUCCESS, NULL);
-				int header = 0;
-				bool rs = true;
-				TCP_Info   pInfoHead;
-				while (rs)
-				{
-					int ret = 0;
-					if ((ret = mSocketLogin->Recv((char*)&pInfoHead, sizeof(TCP_Info))) <= 0)
-					{
-						rs = false;
-					}
-					else
-					{
-						/**
-						*@:首次读取包头信息，读取正确以后解析包头，按照包头的内容读取后续的包体内容
-						*@:读取失败，则直接退出socket连接
-						*/
-						unsigned int packlen = pInfoHead.wPacketSize;
-						unsigned int packetSize = packlen;
-						int recv_len = 0;
-						while ((packlen > 0) && ((ret = mSocketLogin->Recv((char *)(m_cbRecvBufLogin + recv_len), packlen - recv_len)) > 0))
-						{
-							recv_len += ret;
-							if (packlen == recv_len)
-							{
-								packlen = 0;
-								break;
-							}
-						}
-
-						//解密数据//
-						unsigned short wRealySize = CrevasseBuffer(m_cbRecvBufLogin, packetSize);
-						unsigned char* pData = new unsigned char[packetSize];
-
-						/**
-						*@:消息接收成功后发往主线程
-						*/
-						MTNotificationQueue::getInstance()->postNotification("rcvDataLogin", pData);
-					}
-				}
-				mSocketLogin->Close();
-			}
-			m_isOpenSocketLogin = false;
-			//MTNotificationQueue::getInstance()->postNotification(DISCONNECT_GAME_SERVER_EVENT, NULL);
-			return;
+			log("cocos2d-x recv 0 header");
+			continue;
 		}
-	});
+		else if (iRetCode < 0)
+		{
+			closeMySocket(0);
+			return true;
+		}
+		else
+		{
 
-	t_connect.detach();
+			wPacketSizeSave = wPacketSize = pInfoHead.wPacketSize - sizeof(TCP_Info);  //去除TCP_info后的长度
+			if (wPacketSize > SOCKET_TCP_BUFFER)
+			{
+				continue;
+			}
+			if (mSocketLogin == 0)
+			{
+				return true;
+			}
+			int recv_len = 0;
+			while (mSocketLogin != 0)
+			{
+				iRetCode = recv(mSocketLogin, (char *)m_cbRecvBufLogin + recv_len, wPacketSize - recv_len, 0);
+				log("cocos2d-x Body %d", iRetCode);
+				lastRcvTimeLogin = time(NULL);   //更新接收时间
+				if (iRetCode == 0)
+				{
+					isContinune = false;
+					continue;
+				}
+				else if (iRetCode < 0)
+				{
+					mSocketLogin = 0;
+					return true;
+				}
+				recv_len += iRetCode;
+				if (recv_len >= wPacketSize)
+				{
+					break;
+				}
+			}
+			if (isContinune)
+			{
+				wPacketSize = wPacketSizeSave;
+				//解密数据//
+				unsigned short wRealySize = CrevasseBuffer(m_cbRecvBufLogin, wPacketSize);
+				if (wRealySize < sizeof(TCP_Command))
+				{
+					continue;
+				}
+				char* pData = new char[SOCKET_TCP_BUFFER];
+				log("new pData %p\n\n\n", pData);
+				MTCustomEventQueue::getInstance()->pushCustomEvent("rcvDataLogin", pData);
+			}
+		}
+	}
+	//logV("cocos2d-x exit header m_hSocket %d", m_hSocket);
+	return true;
+}
+
+void TTSocketClient::startSocketLogin(const char *ip, unsigned short port)
+{
+	bool isConnect = ConnectIPv4(ip, port, 0);
+	if (isConnect)
+	{
+		std::thread recvDate(&TTSocketClient::recvDateLogin, this);
+		recvDate.detach();
+	}
+}
+
+bool TTSocketClient::ConnectIPv4(const char *ip, unsigned short port, unsigned char bSocketType)
+{
+
+	if (bSocketType == 0)
+	{
+		mSocketLogin = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	}
+	else if (bSocketType == 1)
+	{
+		mSocketGame = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	}
+	log("mSocketLogin %d", mSocketLogin);
+
+	struct sockaddr_in svraddr;
+	svraddr.sin_family = AF_INET;
+	svraddr.sin_addr.s_addr = inet_addr(ip);
+	svraddr.sin_port = htons(port);
+
+	SOCKET socketTmp;
+	if (bSocketType == 0)
+	{
+		socketTmp = mSocketLogin;
+	}
+	else if (bSocketType == 1)
+	{
+		socketTmp = mSocketGame;
+	}
+	int ret = connect(socketTmp, (const struct sockaddr*)&svraddr, sizeof(svraddr));
+	if (ret == SOCKET_ERROR) 
+	{
+		return false;
+	}
+	return true;
+}
+
+
+//加密后的buf
+int TTSocketClient::Send(const char* buf, int len, unsigned char bSocketType, int flags)
+{
+	int bytes;
+	int count = 0;
+
+	SOCKET socketTmp;
+	if (bSocketType == 0)
+	{
+		socketTmp = mSocketLogin;
+	}
+	else if (bSocketType == 1)
+	{
+		socketTmp = mSocketGame;
+	}
+
+	while (count < len) {
+
+		bytes = send(socketTmp, buf + count, len - count, flags);
+		if (bytes == -1 || bytes == 0)
+			return -1;
+		count += bytes;
+	}
+
+	return count;
+}
+
+// int TTSocketClient::Recv(char* buf, int len, int flags, unsigned char bSocketType)
+// {
+// 	SOCKET socketTmp;
+// 	if (bSocketType == 0)
+// 	{
+// 		socketTmp = mSocketLogin;
+// 	}
+// 	else if (bSocketType == 1)
+// 	{
+// 		socketTmp = mSocketGame;
+// 	}
+// 	return (recv(socketTmp, buf, len, flags));
+// }
+
+int TTSocketClient::closeMySocket(unsigned char bSocketType)
+{
+	SOCKET socketTmp;
+	if (bSocketType == 0)
+	{
+		socketTmp = mSocketLogin;
+		mSocketLogin = 0;
+	}
+	else if (bSocketType == 1)
+	{
+		socketTmp = mSocketGame;
+		mSocketGame = 0;
+	}
+#if (PlatWhich == PlatWin)
+	return (closesocket(socketTmp));
+#else
+	return (close(socketTmp));
+#endif
+	
 }

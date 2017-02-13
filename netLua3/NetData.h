@@ -36,7 +36,7 @@ public:
 class  DataSnd :public Ref
 {
 public:
-	char pBuf[16384];
+	unsigned char pBuf[16384];
 	char*  pNow;
 	unsigned short wPos;
 	unsigned short wDataSize;   //全部长度,包含TCP_Head 8字节

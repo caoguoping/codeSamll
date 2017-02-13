@@ -126,10 +126,10 @@ DataSnd* DataSnd::create(unsigned short wMainCmd, unsigned short wSubCmd)
 	DataSnd *pDataSnd = new DataSnd();
 	if (pDataSnd)
 	{
-		pDataSnd->pNow = pDataSnd->pBuf + sizeof(TCP_Info);
+		pDataSnd->pNow = (char*)pDataSnd->pBuf + sizeof(TCP_Info);
 		memcpy(pDataSnd->pNow, &wMainCmd, 2);
 		pDataSnd->pNow += 2;
-		memcpy(&pDataSnd->pNow, &wSubCmd, 2);
+		memcpy(pDataSnd->pNow, &wSubCmd, 2);
 		pDataSnd->pNow += 2;
 		pDataSnd->wDataSize = sizeof(TCP_Head);
 		pDataSnd->autorelease();
@@ -209,6 +209,12 @@ void  DataSnd::sendData(unsigned char bSocketType)
 {
 	unsigned short wEncryptSize = wDataSize - sizeof(TCP_Info);
 	unsigned short wSnapCount = 0;
+
+// 	for (int i = 0; i < wDataSize + sizeof(TCP_Head); i++)
+// 	{
+// 		log("%02x ", pBuf[i]);
+// 	}
+
 	if ((wEncryptSize % sizeof(unsigned int)) != 0)
 	{
 		wSnapCount = sizeof(unsigned int) - wEncryptSize % sizeof(unsigned int);
@@ -227,6 +233,6 @@ void  DataSnd::sendData(unsigned char bSocketType)
 	tcpInfo->cbCheckCode = ~cbCheckCode + 1;
 	tcpInfo->wPacketSize = wDataSize;   //全部长度，包含TCP_Head8字节
 
-	TTSocketClient::getInstance()->getSocket(bSocketType)->Send(pBuf, wDataSize);
+	TTSocketClient::getInstance()->Send((char*)pBuf, wDataSize, bSocketType);
 }
 

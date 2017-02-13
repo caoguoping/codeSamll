@@ -1,18 +1,18 @@
-#include "MTNotificationQueue.h"
+#include "MTCustomEventQueue.h"
 
 mutex shareNotificationQueueLock;
 
-MTNotificationQueue* MTNotificationQueue::mInstance = NULL;
+MTCustomEventQueue* MTCustomEventQueue::mInstance = NULL;
 
-MTNotificationQueue::MTNotificationQueue()
+MTCustomEventQueue::MTCustomEventQueue()
 {
 }
 
-MTNotificationQueue::~MTNotificationQueue()
+MTCustomEventQueue::~MTCustomEventQueue()
 {
 }
 
-void MTNotificationQueue::postNotifications(float dt)
+void MTCustomEventQueue::pushCustomEvents(float dt)
 {
 	LifeCircleMutexLock(&shareNotificationQueueLock);
 
@@ -23,11 +23,14 @@ void MTNotificationQueue::postNotifications(float dt)
 		EventCustom event(arg.name);
 		event.setUserData(arg.pData);
 		dispatcher->dispatchEvent(&event);
+
+
+		log("\n\n arg.pData %p\n\n", arg.pData);
 	}
 	vecNotifications.clear();
 }
 
-void MTNotificationQueue::postNotification(const char* name, void* pData)
+void MTCustomEventQueue::pushCustomEvent(const char* name, char* pData)
 {
 	LifeCircleMutexLock(&shareNotificationQueueLock);
 

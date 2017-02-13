@@ -14,6 +14,8 @@ public:
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+
+	void eventTest(cocos2d::EventCustom*   pEvent);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

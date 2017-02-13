@@ -1,6 +1,6 @@
 /***********************************************************************************
  *Copyright(C),2010-2011,SAINTGAME Company
- *FileName: MTNOTIFICATIONQUEUE.H
+ *FileName: MTCustomEventQueue.H
  *Author  : young
  *Version : 1.0
  *Date    : 2015/3/18
@@ -12,16 +12,16 @@
        Modification:
 **************************************************************************************/
 
-#ifndef __MTNotificationQueue_H__
-#define __MTNotificationQueue_H__
+#ifndef __MTCustomEventQueue_H__
+#define __MTCustomEventQueue_H__
 
 #include "cocos2d.h"
 #include <mutex>
 
-;USING_NS_CC;
+USING_NS_CC;
 using namespace std;
 
-class MTNotificationQueue : public Ref
+class MTCustomEventQueue : public Ref
 {
 private:
 	/**
@@ -31,29 +31,28 @@ private:
 	typedef struct
 	{
 		string   name;
-		//Ref*     obj;
-		void*  pData;
+		char*  pData;
 	} NotificationArgs;
 
 private:
-	MTNotificationQueue();
-	~MTNotificationQueue();
+	MTCustomEventQueue();
+	~MTCustomEventQueue();
 
 public:
-	static MTNotificationQueue* getInstance()
+	static MTCustomEventQueue* getInstance()
 	{
 		if (mInstance == NULL)
 		{
-			mInstance = new MTNotificationQueue;
+			mInstance = new MTCustomEventQueue;
 		}
 		return mInstance;
 	}
 
-	void postNotifications(float dt);
-	void postNotification(const char* name, void* pData);
+	void pushCustomEvents(float dt);
+	void pushCustomEvent(const char* name,  char* pData);
 
 private:
-	static MTNotificationQueue      *mInstance;
+	static MTCustomEventQueue      *mInstance;
 	vector<NotificationArgs>    vecNotifications;
 
 };
@@ -84,4 +83,4 @@ private:
 
 #define LifeCircleMutexLock(_mutex_) LifeCircleMutexLocker __locker__(_mutex_)
 
-#endif //__MTNotificationQueue_H__
+#endif //__MTCustomEventQueue_H__

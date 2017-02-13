@@ -1,7 +1,6 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
-#include "MTNotificationQueue.h"
-
+#include "MTCustomEventQueue.h"
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -41,7 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
 	Director::getInstance()->getScheduler()->schedule(
-		schedule_selector(MTNotificationQueue::postNotifications), MTNotificationQueue::getInstance(), 1.0/60, false);
+		schedule_selector(MTCustomEventQueue::pushCustomEvents), MTCustomEventQueue::getInstance(), 1.0/60, false);
 
 
 
