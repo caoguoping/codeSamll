@@ -1,0 +1,2 @@
+setLastFrameCallFunc   lua不可调用修改
+D:\Mahjong\frameworks\cocos2d-x\cocos\scripting\lua-bindings\manual\ui
