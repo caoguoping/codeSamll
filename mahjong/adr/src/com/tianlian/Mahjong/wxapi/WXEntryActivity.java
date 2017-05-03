@@ -31,10 +31,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     public static final String APP_SECRET = "0788c23a7b0af62542ae7d1b36981c6e";
     
  // private MyApplication myApp;  
-    // ÇëÇóaccess_tokenµØÖ·¸ñÊ½£¬ÒªÌæ»»ÀïÃæµÄAPPID£¬SECRET»¹ÓÐCODE  
+    // ï¿½ï¿½ï¿½ï¿½access_tokenï¿½ï¿½Ö·ï¿½ï¿½Ê½ï¿½ï¿½Òªï¿½æ»»ï¿½ï¿½ï¿½ï¿½ï¿½APPIDï¿½ï¿½SECRETï¿½ï¿½ï¿½ï¿½CODE  
     public static String GetCodeRequest = "https://api.weixin.qq.com/sns/oauth2/access_token?"  
             + "appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";  
-    // ÇëÇóunionidµØÖ·¸ñÊ½£¬ÒªÌæ»»ÀïÃæµÄACCESS_TOKENºÍOPENID  
+    // ï¿½ï¿½ï¿½ï¿½unionidï¿½ï¿½Ö·ï¿½ï¿½Ê½ï¿½ï¿½Òªï¿½æ»»ï¿½ï¿½ï¿½ï¿½ï¿½ACCESS_TOKENï¿½ï¿½OPENID  
     public static String GetUnionIDRequest = "https://api.weixin.qq.com/sns/userinfo?"  
             + "access_token=ACCESS_TOKEN&openid=OPENID";  
   
@@ -56,7 +56,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 //    	mWXApi.registerApp(APP_ID);
 //    	//WxLogin();
 //    	final SendAuth.Req req = new SendAuth.Req();
-//    	req.scope = "snsapi_userinfo"; //ÇëÇó¸öÈËÐÅÏ¢
+//    	req.scope = "snsapi_userinfo"; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 //    	req.state = "null";
 //    	mWXApi.sendReq(req);
     	
@@ -64,7 +64,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     }  
     
     /** 
-     * »Øµ÷Î¢ÐÅ·¢ËÍµÄÇëÇó 
+     * ï¿½Øµï¿½Î¢ï¿½Å·ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ 
      */  
     @Override  
     public void onReq(BaseReq arg0) {  
@@ -85,14 +85,14 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     }  
   
     /** 
-     * ·¢ËÍµ½Î¢ÐÅÇëÇóµÄÏìÓ¦½á¹û 
+     * ï¿½ï¿½ï¿½Íµï¿½Î¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ 
      *  
-     * £¨1£©ÓÃ»§Í¬ÒâÊÚÈ¨ºóµÃµ½Î¢ÐÅ·µ»ØµÄÒ»¸öcode£¬½«codeÌæ»»µ½ÇëÇóµØÖ·GetCodeRequestÀïµÄCODE£¬Í¬ÑùÌæ»»APPIDºÍSECRET 
-     * £¨2£©½«ÐÂµØÖ·newGetCodeRequestÍ¨¹ýHttpClientÈ¥ÇëÇó£¬½âÎö·µ»ØµÄJSONÊý¾Ý 
-     * £¨3£©Í¨¹ý½âÎöJSONµÃµ½ÀïÃæµÄopenid £¨ÓÃÓÚ»ñÈ¡ÓÃ»§¸öÈËÐÅÏ¢£©»¹ÓÐ access_token 
-     * £¨4£©Í¬ÑùµØ£¬½«openidºÍaccess_tokenÌæ»»µ½GetUnionIDRequestÇëÇó¸öÈËÐÅÏ¢µÄµØÖ·Àï 
-     * £¨5£©½«ÐÂµØÖ·newGetUnionIDRequestÍ¨¹ýHttpClientÈ¥ÇëÇó£¬½âÎö·µ»ØµÄJSONÊý¾Ý 
-     * £¨6£©Í¨¹ý½âÎöJSONµÃµ½¸ÃÓÃ»§µÄ¸öÈËÐÅÏ¢£¬°üÀ¨unionid 
+     * ï¿½ï¿½1ï¿½ï¿½ï¿½Ã»ï¿½Í¬ï¿½ï¿½ï¿½ï¿½È¨ï¿½ï¿½Ãµï¿½Î¢ï¿½Å·ï¿½ï¿½Øµï¿½Ò»ï¿½ï¿½codeï¿½ï¿½ï¿½ï¿½codeï¿½æ»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·GetCodeRequestï¿½ï¿½ï¿½CODEï¿½ï¿½Í¬ï¿½ï¿½ï¿½æ»»APPIDï¿½ï¿½SECRET 
+     * ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ö·newGetCodeRequestÍ¨ï¿½ï¿½HttpClientÈ¥ï¿½ï¿½ï¿½ó£¬½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½JSONï¿½ï¿½ï¿½ï¿½ 
+     * ï¿½ï¿½3ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½JSONï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½openid ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ access_token 
+     * ï¿½ï¿½4ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½openidï¿½ï¿½access_tokenï¿½æ»»ï¿½ï¿½GetUnionIDRequestï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Äµï¿½Ö·ï¿½ï¿½ 
+     * ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ö·newGetUnionIDRequestÍ¨ï¿½ï¿½HttpClientÈ¥ï¿½ï¿½ï¿½ó£¬½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½JSONï¿½ï¿½ï¿½ï¿½ 
+     * ï¿½ï¿½6ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½JSONï¿½Ãµï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½unionid 
      */  
     @Override  
     public void onResp(BaseResp arg0) {  
@@ -105,33 +105,33 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         	Log.e("WXActivity", "arg0.getType() == 1");
             switch (arg0.errCode) 
             {  
-            // Í¬ÒâÊÚÈ¨  
+            // Í¬ï¿½ï¿½ï¿½ï¿½È¨  
             case BaseResp.ErrCode.ERR_OK:  
                     
   
             	SendAuth.Resp respLogin = (Resp) arg0;  
-            	// »ñµÃcode  
+            	// ï¿½ï¿½ï¿½code  
             	String code = respLogin.code; 
             
-            	// °Ñcode£¬APPID£¬APPSECRETÌæ»»µ½ÒªÇëÇóµÄµØÖ·Àï£¬³ÉÎªÐÂµÄÇëÇóµØÖ·  
+            	// ï¿½ï¿½codeï¿½ï¿½APPIDï¿½ï¿½APPSECRETï¿½æ»»ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·ï¿½ï£¬ï¿½ï¿½Îªï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·  
             	newGetCodeRequest = getCodeRequest(code);  
       
-//            // ÇëÇóÐÂµÄµØÖ·£¬½âÎöÏà¹ØÊý¾Ý£¬°üÀ¨openid£¬acces_tokenµÈ 
+//            // ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄµï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½openidï¿½ï¿½acces_tokenï¿½ï¿½ 
             	HttpUtils httpUtils = new HttpUtils();
             	httpUtils.send(HttpRequest.HttpMethod.GET, newGetCodeRequest, new RequestCallBack<String>(){
-//                	//ÇëÇó¶¯×÷³É¹¦Ö®ºóµÄ»Øµ÷ 	
+//                	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½Ö®ï¿½ï¿½Ä»Øµï¿½ 	
         		@Override
             	public void onSuccess(ResponseInfo<String> responseInfo)
             	{
             		Log.e("WXActivity", responseInfo.result.toString());
             		parseAccessTokenJSON(responseInfo.result.toString());
-//            		 // ½«½âÎöµÃµ½µÄaccess_tokenºÍopenidÔÚÇëÇóunionidµØÖ·ÀïÌæ»»  
+//            		 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½access_tokenï¿½ï¿½openidï¿½ï¿½ï¿½ï¿½ï¿½ï¿½unionidï¿½ï¿½Ö·ï¿½ï¿½ï¿½æ»»  
             		newGetUnionIDRequest = getUnionID(mAccess_token, mOpenId);  
-////                  // ÇëÇóÐÂµÄunionidµØÖ·£¬½âÎö³ö·µ»ØµÄunionidµÈÊý¾Ý  
+////                  // ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½unionidï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½unionidï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
             		HttpUtils n_httpUtils = new HttpUtils();
             		n_httpUtils.send(HttpRequest.HttpMethod.GET, newGetUnionIDRequest, new RequestCallBack<String>(){
            			
-            			//ÇëÇó¶¯×÷³É¹¦Ö®ºóµÄ»Øµ÷
+            			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½Ö®ï¿½ï¿½Ä»Øµï¿½
             			@Override  	
                    		public void onSuccess(ResponseInfo<String> n_responseInfo)
                     	{
@@ -143,7 +143,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     	}
             		 });            		
             	}
-//            	//ÇëÇó¶¯×÷Ê§°Ü         	
+//            	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½         	
             	@Override
             	public void onFailure(HttpException error, String msg){
             		
@@ -180,11 +180,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 //                    }};  
 //                    timer.schedule(task, 2000);  
 //                    break;  
-//                    // ¾Ü¾øÊÚÈ¨  
+//                    // ï¿½Ü¾ï¿½ï¿½ï¿½È¨  
 //                    case BaseResp.ErrCode.ERR_AUTH_DENIED:  
 //                        finish();  
 //                        break;  
-//                        // È¡Ïû²Ù×÷  
+//                        // È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
 //                        case BaseResp.ErrCode.ERR_USER_CANCEL:  
 //                            finish();  
 //                            break;  
@@ -198,8 +198,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             
   
     /** 
-     * * Ìæ»»GetCodeRequest ½«APP ID£¬APP SECRET£¬codeÌæ»»µ½Á´½ÓÀï * * @param code * 
-     * ÊÚÈ¨Ê±£¬Î¢ÐÅ»Øµ÷¸øµÄ * @return URL 
+     * * ï¿½æ»»GetCodeRequest ï¿½ï¿½APP IDï¿½ï¿½APP SECRETï¿½ï¿½codeï¿½æ»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ * * @param code * 
+     * ï¿½ï¿½È¨Ê±ï¿½ï¿½Î¢ï¿½Å»Øµï¿½ï¿½ï¿½ï¿½ï¿½ * @return URL 
      */  
     public static String getCodeRequest(String code) {  
         String result = null;  
@@ -211,7 +211,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     }  
   
     /** 
-     * * Ìæ»»GetUnionID * * @param access_token * @param open_id * @return 
+     * * ï¿½æ»»GetUnionID * * @param access_token * @param open_id * @return 
      */  
     public static String getUnionID(String access_token, String open_id) {  
         String result = null;  
@@ -232,7 +232,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     }  
   
     /** 
-     * * ½âÎöaccess_token·µ»ØµÄJSONÊý¾Ý * * @param response 
+     * * ï¿½ï¿½ï¿½ï¿½access_tokenï¿½ï¿½ï¿½Øµï¿½JSONï¿½ï¿½ï¿½ï¿½ * * @param response 
      */  
     private void parseAccessTokenJSON(String response) {  
         // TODO Auto-generated method stubtry  
@@ -243,7 +243,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             String refreshToken = jsonObject.getString("refresh_token");  
             mOpenId = jsonObject.getString("openid");  
             String scope = jsonObject.getString("scope");  
-            //½«»ñÈ¡µ½µÄÊý¾ÝÐ´½øSharedPreferencesÀï  
+            //ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½SharedPreferencesï¿½ï¿½  
 //            editor.putString("access_token",mAccess_token);  
 //            editor.putString("expires_in",expiresIn);  
 //            editor.putString("refresh_token",refreshToken);  
@@ -266,7 +266,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     
     
     /** 
-     * * ½âÎöunionidÊý¾Ý * @param response 
+     * * ï¿½ï¿½ï¿½ï¿½unionidï¿½ï¿½ï¿½ï¿½ * @param response 
      */  
     private void parseUnionIdJson(String response) {  
                                                       
@@ -290,7 +290,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             	headimgurl = "http://wx.qlogo.cn/mmopen/jLhVg6sHdslhWCyQCWralWY7gXJbvIzZDZzpuZv14icHuuBKwk4nIEzUkgzXibC4iczHKq9buo4C4tWd2A5DlicRsHpLaONibo06D/0";
             }            
             String unionid = jsonObject.getString("unionid");
-            String strRoom = Constants.strRoom;     //·¿¼äºÅ
+            String strRoom = Constants.strRoom;     //ï¿½ï¿½ï¿½ï¿½ï¿½
             Log.e("LUA-print WXActivity ", " openid is " + openid);  
             Log.e("LUA-print WXActivity", "nickname is " + nickname);  
             Log.e("LUA-print WXActivity", "sex is " + sex);  
@@ -299,9 +299,9 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             Log.e("LUA-print WXActivity", "country is " + country);  
             Log.e("LUA-print WXActivity", "headimgurl is " + headimgurl);  
             Log.e("LUA-print WXActivity", "unionid is " + unionid);  
+            Log.e("LUA-print WXActivity", "ip is " + Constants.hostIp);
             
-            
-            SDKPlugin.LoginCallback(openid, nickname, sex, headimgurl,  strRoom);
+            SDKPlugin.LoginCallback(openid, nickname, sex, headimgurl,  strRoom, Constants.hostIp);
             finish();
             
             

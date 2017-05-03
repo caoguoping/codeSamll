@@ -26,19 +26,22 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.lua;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.security.MessageDigest;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
-
 import com.anysdk.framework.PluginWrapper;
-
 import android.R.bool;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,7 +62,6 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.Toast;
-
 import com.tianlian.Mahjong.Constants;
 import com.tianlian.Mahjong.wxapi.Util;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -68,12 +70,15 @@ import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 
 
 
-public class AppActivity extends Cocos2dxActivity{
+
+
+@SuppressLint("DefaultLocale") public class AppActivity extends Cocos2dxActivity{
 	private static Context mContext;
 	private static final int THUMB_SIZE = 150;
 	private static int mTargetScene;
@@ -81,6 +86,7 @@ public class AppActivity extends Cocos2dxActivity{
 	private static String mStrRoomNum;
 	
     static String hostIPAdress = "0.0.0.0";
+    static String strBody = "南京秦淮麻将充值中心";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +111,8 @@ public class AppActivity extends Cocos2dxActivity{
         	Constants.strRoom = "0";
         }
 
-    
-
+        //获取ip
+		Constants.hostIp = getHostIpAddress();
 
         PluginWrapper.init(this);
 		PluginWrapper.setGLSurfaceView(Cocos2dxGLSurfaceView.getInstance());
@@ -163,14 +169,103 @@ public class AppActivity extends Cocos2dxActivity{
 	   	req.scope = "snsapi_userinfo"; //请求个人信息   
 		req.state = "null";
 		boolean isSuccessSend = Constants.wx_api.sendReq(req);
-//		String path = "/sdcard/headshot_example.png";
-//		weChatShare(path);
+	
+
 	}
 	
 	
 	private static String buildTransaction(final String type) {
 		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
 	}
+	
+	
+	
+	
+	/**
+	 * 对字符串md5加密
+	 *
+	 * @param str
+	 * @return
+	 */
+	public static String getMD5(String str) {
+	    try {
+	        // 生成一个MD5加密计算摘要
+	        MessageDigest md = MessageDigest.getInstance("MD5");
+	        // 计算md5函数
+	        md.update(str.getBytes());
+	        // digest()最后确定返回md5 hash值，返回值为8位字符串。因为md5 hash值是16位的hex值，实际上就是8位的字符
+	        // BigInteger函数则将8位的字符串转换成16位hex值，用字符串来表示；得到字符串形式的hash值
+	        return new BigInteger(1, md.digest()).toString(16);
+	    } catch (Exception e) {
+	        //throw new SpeedException("MD5加密出现错误");
+	    	return "";
+	    }
+	}
+	
+	
+	/**
+	 * 微信支付
+	 * **/
+	@SuppressLint("DefaultLocale") public static void callWeChatPay(String prePayId, String  saves)
+	{
+
+		
+		
+		
+        PayReq req = new PayReq();
+        req.appId = "wx28da1972ed3f2ee3";
+        req.partnerId = "1459102302";
+        req.prepayId = prePayId;
+        req.packageValue = "Sign=WXPay";
+        req.nonceStr = String.valueOf((int)(1+Math.random()*100000000));
+        req.timeStamp = saves;
+        
+		//字典序排序  
+		HashMap<String,String> map=new HashMap<String,String>();  
+		  
+		map.put("appid", req.appId);  
+		map.put("partnerid", req.partnerId);  
+		map.put("prepayid", prePayId);  
+		map.put("package", req.packageValue);  
+		map.put("noncestr", req.nonceStr);
+		map.put("timestamp", req.timeStamp);
+		  
+		Collection<String> keyset= map.keySet();   
+		  
+		List list=new ArrayList<String>(keyset);  
+		  
+		Collections.sort(list);  
+		//这种打印出的字符串顺序和微信官网提供的字典序顺序是一致的  
+		String stringA = "appid=wx28da1972ed3f2ee3";
+		
+		for(int i=1;i<list.size();i++)   //第0个是appid
+		{  
+			stringA = stringA + "&" + list.get(i) + "=" + map.get(list.get(i));
+			//System.out.println();  
+
+		}  
+		
+		
+		//Log.e("LUA-print", "LUA-print stirngA " + stringA); 
+		String stringSignTemp = stringA + "&key=T3CXEPObkNPmk1qTZ27VLIvtQu2wdKDc";
+		//Log.e("LUA-print", "LUA-print stirngSignTmp " + stringSignTemp); 
+		
+		String signTmp = getMD5(stringSignTemp) ;   //.toUpperCase();
+		String sign = signTmp.toUpperCase();
+		//Log.e("LUA-print", "LUA-print getMD5 " + "LUA-print SendOK"); 
+		//Log.e("LUA-print", "LUA-print  " + sign); 
+        
+        
+        
+        req.sign = sign;
+
+        Constants.wx_api.sendReq(req);
+        //Log.e("LUA-print", "LUA-print wx_api sendReq OK"); 
+		
+	}
+	
+	
+	
 	
 	//// 邀请微信好友 path 图片路径  url 网址  ，房间号，    isToAll  1:分享到朋友圈， 0  分享给好友 
 	public static void WechatShareJoin(String path, String url,  int roomNum,  int isToAll)
@@ -200,11 +295,8 @@ public class AppActivity extends Cocos2dxActivity{
 		webpage.webpageUrl = url + "?id=" + str_m;
 		Log.e("LUA-print", "LUA-print  " + "webpage.webpageUrl" + webpage.webpageUrl);
 		WXMediaMessage msg = new WXMediaMessage(webpage);
-		
 
-		
-		//msg.title = "房间号: " + String.valueOf(roomNum) ;
-	    msg.title = "房间号: " + str_m ;
+		msg.title = "房间号: " + str_m ;
 		msg.description = "我正在秦淮南京麻将等你，快来加入吧！ ";
 		
 		//图片，暂时注释掉
@@ -224,30 +316,31 @@ public class AppActivity extends Cocos2dxActivity{
 		Log.e("LUA-print", "LUA-print  " + "LUA-print SendOK");  
 	}
 	
-//    private void shareText(String text) {
-//        // 初始化一个WXTextObject对象
-//        WXTextObject textObj = new WXTextObject();
-//        textObj.text = text;
+	
+	
+	
+	
+	
+	/**
+     * 微信支付
+     * @param pay_param 支付服务生成的支付参数
+     */
+	
+	
+//    private void doWXPay(String pay_param) {
+//	private void doPay(String path, String url,  int roomNum,  int isToAll) {
+//        PayReq req = new PayReq();
+//        req.appId = param.optString("appid");
+//        req.partnerId = param.optString("partnerid");
+//        req.prepayId = param.optString("prepayid");
+//        req.packageValue = param.optString("package");
+//        req.nonceStr = param.optString("noncestr");
+//        req.timeStamp = param.optString("timestamp");
+//        req.sign = param.optString("sign");
 //
-//        // 用WXTextObject对象初始化一个WXMediaMessage对象
-//        WXMediaMessage msg = new WXMediaMessage();
-//        msg.mediaObject = textObj;
-//        // 发送文本类型的消息时，title字段不起作用
-//        // msg.title = "Will be ignored";
-//        msg.description = text;
-//
-//        // 构造一个Req
-//        SendMessageToWX.Req req = new SendMessageToWX.Req();
-//        req.transaction = buildTransaction("text"); // transaction字段用于唯一标识一个请求
-//        req.message = msg;
-//        // 是否分享到朋友圈
-//        req.scene = isTimelineCb.isChecked() ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;
-//
-//        // 调用api接口发送数据到微信
-//        api.sendReq(req);
+//        mWXApi.sendReq(req);
 //    }
-	
-	
+//	
     private boolean isNetworkConnected() {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);  
             if (cm != null) {  

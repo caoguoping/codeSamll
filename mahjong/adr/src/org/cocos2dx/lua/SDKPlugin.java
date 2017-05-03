@@ -2,7 +2,7 @@ package org.cocos2dx.lua;
 
 public class SDKPlugin{
 	
-	public static native void LoginCallback(String openid, String nickname, String sex, String headimgurl, String city);
-	public static native void paySecessCallback(String orderNum, String save);   //³äÖµ³É¹¦»Øµ÷
-	public static native void sendDeepLink(String RoomNum, String save);   //»ñÈ¡²ÎÊýºó»Øµ÷
+	public static native void LoginCallback(String openid, String nickname, String sex, String headimgurl, String city, String ip);
+	public static native void paySecessCallback(String orderNum, String save);   //ï¿½ï¿½Öµï¿½É¹ï¿½ï¿½Øµï¿½
+	public static native void sendDeepLink(String RoomNum, String save);   //ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½
 }

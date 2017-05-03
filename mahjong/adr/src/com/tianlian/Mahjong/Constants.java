@@ -5,10 +5,11 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 public class Constants {
 	
-	public static IWXAPI wx_api; //È«¾ÖµÄÎ¢ÐÅapi¶ÔÏó
+	public static IWXAPI wx_api; //È«ï¿½Öµï¿½Î¢ï¿½ï¿½apiï¿½ï¿½ï¿½ï¿½
 	
 	public static final String APP_ID = "wx28da1972ed3f2ee3"; 
 	
 	public static String strRoom = "";
+	public static String hostIp = "";
 
 }
