@@ -1,2 +1,5 @@
 setLastFrameCallFunc   lua不可调用修改
 D:\Mahjong\frameworks\cocos2d-x\cocos\scripting\lua-bindings\manual\ui
+
+禁止Android多点触摸
+E:\NJMaJiangSVN\Client\Mahjong\frameworks\runtime-src\proj.android\src\org\cocos2dx\lib
